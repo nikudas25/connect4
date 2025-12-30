@@ -1,0 +1,10 @@
+# Virtual environment
+venv/
+__pycache__/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# PyGame cache
+*.log

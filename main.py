@@ -6,6 +6,7 @@ from ui import *
 
 MENU = "menu"
 GAME = "game"
+GAME_OVER = "game_over"
 state = MENU
 
 board = create_board()
@@ -59,6 +60,8 @@ while True:
                 )
                 pygame.display.update()
 
+
+
             if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
                 pygame.draw.rect(screen, BLACK, (0, 0, WIDTH, SQUARE_SIZE))
 
@@ -76,6 +79,10 @@ while True:
                             True,
                             RED if turn == PLAYER_1 else YELLOW
                         )
+                    
+                    if check_winner(board, turn):
+                        winner = turn
+                        state = GAME_OVER
                         
                         screen.blit(label, (40, 10))
                         pygame.display.update()
@@ -83,8 +90,23 @@ while True:
 
                     turn = PLAYER_2 if turn == PLAYER_1 else PLAYER_1
 
-    if game_over:
-        pygame.time.wait(2000)
+        elif state == GAME_OVER:
+            draw_game_over(screen, winner)
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                action = game_over_click(event.pos)
+
+                if action == "play_again":
+                    board = create_board()
+                    turn = PLAYER_1
+                    winner = None
+                    state = GAME
+                    draw_board(screen, board)
+
+                elif action == "MENU":
+                    state = MENU
+    # if game_over:
+    #     pygame.time.wait(2000)
 
 
 

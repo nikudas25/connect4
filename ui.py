@@ -147,10 +147,25 @@ def draw_game_over(screen, winner):
     screen.blit(overlay, (0, 0))
 
     if winner == PLAYER_1:
+        winner_text = "PLAYER 1 WINS!"
         winner_color = RED
     
     elif winner == PLAYER_2:
-        winner_color
+        winner_text = "PLAYER 2 WINS!"
+        winner_color = YELLOW
+    else:
+        winner_text = "DRAW"
+        winner_color = (200, 200, 200)
+
+    winner_surface = FONT.render(winner_text, True, winner_color)
+
+    screen.blit(
+        winner_surface,
+        (
+            WIDTH // 2 - winner_surface.get_width() // 2,
+            200
+        )
+    )
 
     play_text_surface = FONT.render("PLAY AGAIN", True, winner_color)
     play_padding_x = 40
@@ -177,8 +192,10 @@ def draw_game_over(screen, winner):
     #Hover BG color (neutral, readable)
     play_bg_color = (60, 60, 60) if play_hover else BLACK
 
+    base_rect = play_again_rect.copy()
+
     if play_hover:
-        play_again_rect.inflate_ip(6, 6)
+        play_again_rect = base_rect.inflate(6, 6)
 
 
     pygame.draw.rect(

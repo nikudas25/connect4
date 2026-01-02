@@ -170,19 +170,34 @@ def draw_game_over(screen, winner):
         70
     )
 
+
     mouse_pos = pygame.mouse.get_pos()
     play_hover = play_again_rect.collidepoint(mouse_pos)
 
     #Hover BG color (neutral, readable)
     play_bg_color = (60, 60, 60) if play_hover else BLACK
 
+    if play_hover:
+        play_again_rect.inflate_ip(6, 6)
+
+
     pygame.draw.rect(
         screen,
-        winner_color,
+        play_bg_color,
         play_again_rect, 
         width = 2,
         border_radius=12
     )
+
+    pygame.draw.rect(
+        screen,
+        winner_color,
+        play_again_rect,
+        width=2,
+        border_radius=12
+    )
+    
+
 
 
     screen.blit(
@@ -192,6 +207,8 @@ def draw_game_over(screen, winner):
             play_again_rect.centery - play_text_surface.get_height() // 2
         )
     )
+
+
 
     pygame.display.update()
     return play_again_rect, None

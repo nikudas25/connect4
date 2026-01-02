@@ -48,7 +48,7 @@ def check_diagonal_down(board, player):
         for col in range(COLS - 3):
             if all(board[row + i][col + i] == player for i in range(4)):
                 return True
-            return False
+    return False
         
 def check_diagonal_up(board, player):
     for row in range(3, ROWS):

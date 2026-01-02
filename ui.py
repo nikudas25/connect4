@@ -163,6 +163,13 @@ def draw_game_over(screen, winner):
         play_text_surface.get_height() + play_padding_y
     )
 
+    menu_rect = pygame.Rect(
+        WIDTH // 2 - 120, 
+        420,
+        240,
+        70
+    )
+
     mouse_pos = pygame.mouse.get_pos()
     play_hover = play_again_rect.collidepoint(mouse_pos)
 
@@ -186,18 +193,17 @@ def draw_game_over(screen, winner):
         )
     )
 
-
-
     pygame.display.update()
+    return play_again_rect, None
 
 
-def game_over_click(pos):
-    play_again_rect = pygame.Rect(WIDTH // 2 - 150, 320, 300, 70)
-    menu_rect = pygame.Rect(WIDTH // 2 - 150, 420, 300, 70)
+# def game_over_click(pos):
+#     play_again_rect = pygame.Rect(WIDTH // 2 - 150, 320, 300, 70)
+#     menu_rect = pygame.Rect(WIDTH // 2 - 150, 420, 300, 70)
 
-    if play_again_rect.collidepoint(pos):
-        return "play again"
-    if menu_rect.collidepoint(pos):
-        return "menu"
+#     if play_again_rect.collidepoint(pos):
+#         return "play again"
+#     if menu_rect.collidepoint(pos):
+#         return "menu"
     
-    return None
+#     return None

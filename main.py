@@ -91,19 +91,18 @@ while True:
                     turn = PLAYER_2 if turn == PLAYER_1 else PLAYER_1
 
         elif state == GAME_OVER:
-            draw_game_over(screen, winner)
+            play_again_rect, menu_rect = draw_game_over(screen, winner)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                action = game_over_click(event.pos)
-
-                if action == "play_again":
+                if play_again_rect.collidepoint(event.pos):
                     board = create_board()
                     turn = PLAYER_1
                     winner = None
+                    game_over = False
                     state = GAME
                     draw_board(screen, board)
 
-                elif action == "MENU":
+                elif menu_rect.collidepoint(event.pos):
                     state = MENU
     # if game_over:
     #     pygame.time.wait(2000)

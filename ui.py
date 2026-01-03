@@ -167,6 +167,9 @@ def draw_game_over(screen, winner):
         )
     )
 
+    mouse_pos = pygame.mouse.get_pos()
+
+    #Play Button
     play_text_surface = FONT.render("PLAY AGAIN", True, winner_color)
     play_padding_x = 40
     play_padding_y = 20
@@ -214,9 +217,6 @@ def draw_game_over(screen, winner):
         border_radius=12
     )
     
-
-
-
     screen.blit(
         play_text_surface,
         (
@@ -226,9 +226,32 @@ def draw_game_over(screen, winner):
     )
 
 
+    #MENU BUTTON
+    menu_text_surface = FONT.render("BACK TO MENU", True, winner_color)
+    menu_base_rect = pygame.Rect(
+        WIDTH // 2 - 200,
+        420,
+        450,
+        80
+    )
 
+    menu_hover = menu_base_rect.collidepoint(mouse_pos)
+    menu_rect = menu_base_rect.inflate(8, 8) if menu_hover else menu_base_rect
+    menu_bg_color = (25, 25, 25) if menu_hover else BLACK
+
+    pygame.draw.rect(screen, menu_bg_color, menu_rect, border_radius=12)
+    pygame.draw.rect(screen, winner_color, menu_rect, width=2, border_radius=12)
+
+    screen.blit(
+        menu_text_surface,
+        (
+            menu_rect.centerx - menu_text_surface.get_width() // 2,
+            menu_rect.centery - menu_text_surface.get_height() // 2
+        )
+    )
+    
     pygame.display.update()
-    return play_again_rect, None
+    return play_again_rect, menu_base_rect
 
 
 # def game_over_click(pos):

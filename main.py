@@ -103,15 +103,13 @@ while True:
                     draw_board(screen, board)
 
                 elif menu_rect.collidepoint(event.pos):
+                    board = create_board()
+                    turn = PLAYER_1
+                    winner = None
+                    game_over = False
                     state = MENU
     # if game_over:
     #     pygame.time.wait(2000)
-
-
-
-
-
-
 
 #                 if check_winner(board, turn):
 #                     label = FONT.render(

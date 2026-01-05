@@ -18,6 +18,10 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 
+MENU_Y = 420
+MENU_WIDTH = 460
+MENU_HEIGHT = 80
+MENU_X_OFFSET = -1.5
 
 
 def draw_board(screen, board):
@@ -178,7 +182,7 @@ def draw_game_over(screen, winner):
         WIDTH // 2 - (play_text_surface.get_width() + play_padding_x) // 2,
         320,
         play_text_surface.get_width() + play_padding_x,
-        play_text_surface.get_height() + play_padding_y
+        62 + play_padding_y
     )
 
     menu_rect = pygame.Rect(
@@ -229,26 +233,30 @@ def draw_game_over(screen, winner):
     #MENU BUTTON
     menu_text_surface = FONT.render("BACK TO MENU", True, winner_color)
     menu_base_rect = pygame.Rect(
-        WIDTH // 2 - 200,
-        420,
-        450,
-        80
+        WIDTH // 2 - MENU_WIDTH // 2 + MENU_X_OFFSET,
+        MENU_Y,
+        MENU_WIDTH,
+        MENU_HEIGHT
     )
 
     menu_hover = menu_base_rect.collidepoint(mouse_pos)
     menu_rect = menu_base_rect.inflate(8, 8) if menu_hover else menu_base_rect
-    menu_bg_color = (25, 25, 25) if menu_hover else BLACK
+    
 
-    pygame.draw.rect(screen, menu_bg_color, menu_rect, border_radius=12)
-    pygame.draw.rect(screen, winner_color, menu_rect, width=2, border_radius=12)
+    pygame.draw.rect(screen, BLACK, menu_rect, border_radius=12)
 
-    screen.blit(
-        menu_text_surface,
-        (
-            menu_rect.centerx - menu_text_surface.get_width() // 2,
-            menu_rect.centery - menu_text_surface.get_height() // 2
-        )
+    border_width = 3 if menu_hover else 2
+
+    pygame.draw.rect(
+        screen,
+        winner_color,
+        menu_rect,
+        width=border_width,
+        border_radius=12
     )
+
+    menu_text_rect = menu_text_surface.get_rect(center = menu_rect.center)
+    screen.blit(menu_text_surface, menu_text_rect)
     
     pygame.display.update()
     return play_again_rect, menu_base_rect

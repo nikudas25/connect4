@@ -61,25 +61,36 @@ def draw_board(screen, board):
 
     
 def animate_piece(screen, board, col, row, player):
-
     color = RED if player == PLAYER_1 else YELLOW
 
-    start_y = SQUARE_SIZE // 2
-    end_y = (row + 1) * SQUARE_SIZE + SQUARE_SIZE // 2
+    clock = pygame.time.Clock()
 
-    for y in range(start_y, end_y, 20):
+    x = col * SQUARE_SIZE + SQUARE_SIZE // 2
+    y = SQUARE_SIZE // 2
+    target_y = (row + 1) * SQUARE_SIZE + SQUARE_SIZE // 2
+
+    velocity = 0
+    gravity = 20
+
+    while y < target_y:
+        dt = clock.tick(60) / 100
+
+        velocity += gravity * dt
+        y += velocity * dt
+
+        if y > target_y:
+            y = target_y
+            velocity *= -0.15
+
         draw_board(screen, board)
-
         pygame.draw.circle(
             screen,
             color,
-            (col * SQUARE_SIZE + SQUARE_SIZE // 2, y),
+            (x, int(y)),
             RADIUS
         )
 
         pygame.display.update()
-        pygame.time.delay(20)
-        
         
 def draw_menu(screen, mouse_pos):
     screen.fill(BLACK)

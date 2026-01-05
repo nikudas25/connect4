@@ -7,15 +7,6 @@ PLAYER_2 = 2
 def create_board():
     return[[EMPTY for _ in range(COLS)] for _ in range(ROWS)]
 
-# def drop_piece(board, col, player):
-#     if col < 0 or col >= COLS:
-#         return False
-    
-#     for row in range(ROWS - 1, -1, -1):
-#         if board[row][col] == EMPTY:
-#             board[row][col] = player
-#             return True
-#     return False
 def get_next_open_row(board, col):
     if col < 0 or col >= COLS:
         return None

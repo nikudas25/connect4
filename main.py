@@ -42,12 +42,6 @@ while True:
 
                 if action == "play":
                     state = MODE_SELECT
-                    # board = create_board()
-                    # turn = PLAYER_1
-                    # game_over = False
-
-                    # state = GAME
-                    # draw_board(screen, board)
 
                 elif action == "quit":
                     pygame.quit()
@@ -55,32 +49,65 @@ while True:
 
         elif state == MODE_SELECT:
             screen.fill(BLACK)
+            mouse_pos = pygame.mouse.get_pos()
+
+            back_base = pygame.Rect(30, 30, 160, 55)
+            back_hover = back_base.collidepoint(mouse_pos)
+            back_rect = back_base.inflate(6, 6) if back_hover else back_base
+
+            pygame.draw.rect(screen, RED, back_rect, 2, border_radius=10)
+            back_text = FONT.render("BACK", True, RED)
+            screen.blit(back_text, back_text.get_rect(center=back_rect.center))
 
             title = FONT.render("CHOOSE MODE", True, RED)
-            pvp_text = FONT.render("PLAYER vs PLAYER", True, YELLOW)
-            ai_text = FONT.render("PLAYER vs AI", True, YELLOW)
-
             title_rect = title.get_rect(center=(WIDTH // 2, 180))
-            pvp_rect = pygame.Rect(WIDTH // 2 - 250, 300, 500, 70)
-            ai_rect = pygame.Rect(WIDTH // 2 - 250, 400, 500, 70)
-
             screen.blit(title, title_rect)
-            screen.blit(pvp_text, pvp_rect)
-            screen.blit(ai_text, ai_rect)
+
+            #Base rects
+            pvp_base = pygame.Rect(WIDTH // 2 - 295, 300, 590, 70)
+            ai_base = pygame.Rect(WIDTH // 2 - 250, 400, 500, 70)
+
+            #Hover detection
+            pvp_hover = pvp_base.collidepoint(mouse_pos)
+            ai_hover = ai_base.collidepoint(mouse_pos)
+
+            #Inflate hover
+            pvp_rect = pvp_base.inflate(10, 10) if pvp_hover else pvp_base
+            ai_rect = ai_base.inflate(10, 10) if ai_hover else ai_base
+
+            pygame.draw.rect(screen, YELLOW, pvp_rect, 3, border_radius=12)
+            pygame.draw.rect(screen, YELLOW, ai_rect, 3, border_radius=12)
+
+            #Text
+            pvp_text = FONT.render("PLAYER vs PLAYER", True, YELLOW)
+            ai_text  = FONT.render("PLAYER vs BOT", True, YELLOW)
+
+            screen.blit(pvp_text, pvp_text.get_rect(center=pvp_rect.center))
+            screen.blit(ai_text, ai_text.get_rect(center=ai_rect.center))
 
             pygame.display.update()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if back_rect.collidepoint(event.pos):
+                    state = MENU
+                    continue
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 if pvp_rect.collidepoint(event.pos):
                     AI_ENABLED = False
+
                 elif ai_rect.collidepoint(event.pos):
                     AI_ENABLED = True
 
+                else:
+                    continue
+                
                 board = create_board()
                 turn = PLAYER_1
                 game_over = False
                 state = GAME
                 draw_board(screen, board)
+
 
         #Game code
         elif state == GAME:

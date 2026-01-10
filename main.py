@@ -3,11 +3,18 @@ import pygame
 
 from game_logic import *
 from ui import *
+from ai_player import ai_move
 
 MENU = "menu"
 GAME = "game"
 GAME_OVER = "game_over"
+MODE_SELECT = "mode_select"
+
 state = MENU
+
+
+AI_ENABLED = True
+AI_DEPTH = 4
 
 board = create_board()
 game_over = False
@@ -45,8 +52,50 @@ while True:
                     pygame.quit()
                     sys.exit()
 
+        elif state == MODE_SELECT:
+            screen.fill(BLACK)
+
+            pvp_text = FONT.render("PLAYER vs PLAYER", True, YELLOW)
+            ai_text = FONT.render("PLAYER vs AI", True, YELLOW)
+
+            pvp_rect = pygame.Rect(WIDTH // 2 - 250, 300, 500, 70)
+            ai_rect = pygame.Rect(WIDTH // 2 - 250, 400, 500, 70)
+
+            screen.blit(pvp_text, pvp_text)
+            screen.blit(ai_text, ai_rect)
+            pygame.display.update()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if pvp_rect.collidepoint(event.pos):
+                    AI_ENABLED = False
+                elif ai_rect.collidepoint(event.pos):
+                    AI_ENABLED = True
+
+                board = create_board()
+                turn = PLAYER_1
+                game_over = False
+                state = GAME
+                draw_board(screen, board)
+
         #Game code
         elif state == GAME:
+
+            if AI_ENABLED and turn == PLAYER_2 and not game_over:
+                pygame.time.wait(400)
+                col = ai_move(board, AI_DEPTH)
+                row = get_next_open_row(board, col)
+
+                if row is not None:
+                    animate_piece(screen, board, col, row, PLAYER_2)
+                    place_piece(board, row, col, PLAYER_2)
+                    draw_board(screen, board)
+
+                if check_winner(board, PLAYER_2):
+                    winner = PLAYER_2
+                    state = GAME_OVER
+                    game_over = True
+
+                turn = PLAYER_1
 
             if event.type == pygame.MOUSEMOTION and not game_over:
                 pygame.draw.rect(screen, BLACK, (0, 0, WIDTH, SQUARE_SIZE))
@@ -60,10 +109,9 @@ while True:
                 )
                 pygame.display.update()
 
-
-
             if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
-                pygame.draw.rect(screen, BLACK, (0, 0, WIDTH, SQUARE_SIZE))
+                if AI_ENABLED and turn == PLAYER_2:
+                    continue
 
                 col = event.pos[0] // SQUARE_SIZE
                 row = get_next_open_row(board, col)

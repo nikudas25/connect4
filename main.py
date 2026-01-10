@@ -41,12 +41,13 @@ while True:
                 action = menu_click(event.pos)
 
                 if action == "play":
-                    board = create_board()
-                    turn = PLAYER_1
-                    game_over = False
+                    state = MODE_SELECT
+                    # board = create_board()
+                    # turn = PLAYER_1
+                    # game_over = False
 
-                    state = GAME
-                    draw_board(screen, board)
+                    # state = GAME
+                    # draw_board(screen, board)
 
                 elif action == "quit":
                     pygame.quit()
@@ -55,14 +56,18 @@ while True:
         elif state == MODE_SELECT:
             screen.fill(BLACK)
 
+            title = FONT.render("CHOOSE MODE", True, RED)
             pvp_text = FONT.render("PLAYER vs PLAYER", True, YELLOW)
             ai_text = FONT.render("PLAYER vs AI", True, YELLOW)
 
+            title_rect = title.get_rect(center=(WIDTH // 2, 180))
             pvp_rect = pygame.Rect(WIDTH // 2 - 250, 300, 500, 70)
             ai_rect = pygame.Rect(WIDTH // 2 - 250, 400, 500, 70)
 
-            screen.blit(pvp_text, pvp_text)
+            screen.blit(title, title_rect)
+            screen.blit(pvp_text, pvp_rect)
             screen.blit(ai_text, ai_rect)
+
             pygame.display.update()
 
             if event.type == pygame.MOUSEBUTTONDOWN:

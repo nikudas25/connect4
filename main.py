@@ -19,6 +19,7 @@ AI_DEPTH = 4
 board = create_board()
 game_over = False
 turn = PLAYER_1
+pulse_phase = 0.0
 
 mouse_pos = pygame.mouse.get_pos()
 draw_menu(screen, mouse_pos)
@@ -130,15 +131,28 @@ while True:
                 turn = PLAYER_1
 
             if event.type == pygame.MOUSEMOTION and not game_over:
-                pygame.draw.rect(screen, BLACK, (0, 0, WIDTH, SQUARE_SIZE))
-                x = event.pos[0]
-                color = RED if turn == PLAYER_1 else YELLOW
-                pygame.draw.circle(
-                    screen,
-                    color,
-                    (x, SQUARE_SIZE // 2),
-                    RADIUS
-                )
+
+                #Redraw board first
+                draw_board(screen, board)
+
+                col = event.pos[0] // SQUARE_SIZE
+
+                if 0 <= col < COLS:
+                    row = get_next_open_row(board, col)
+
+                    if row is not None:
+                        x = col * SQUARE_SIZE + SQUARE_SIZE // 2
+                        y = (row + 1) * SQUARE_SIZE + SQUARE_SIZE // 2
+
+                        highlight_color = RED if turn == PLAYER_1 else YELLOW
+
+                        pygame.draw.circle(
+                            screen,
+                            highlight_color,
+                            (x,y),
+                            RADIUS,
+                            width=4
+                        )
                 pygame.display.update()
 
             if event.type == pygame.MOUSEBUTTONDOWN and not game_over:

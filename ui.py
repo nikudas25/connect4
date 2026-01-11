@@ -21,7 +21,7 @@ YELLOW = (255, 255, 0)
 MENU_Y = 420
 MENU_WIDTH = 460
 MENU_HEIGHT = 80
-MENU_X_OFFSET = -1.5
+MENU_X_OFFSET = -0.9
 
 
 def draw_board(screen, board):

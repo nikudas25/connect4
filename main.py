@@ -1,5 +1,6 @@
 import sys
 import pygame
+import math
 
 from game_logic import *
 from ui import *
@@ -132,7 +133,10 @@ while True:
 
             if event.type == pygame.MOUSEMOTION and not game_over:
 
-                #Redraw board first
+                #Do not show previous during AI turn
+                if AI_ENABLED and turn == PLAYER_2:
+                    continue
+
                 draw_board(screen, board)
 
                 col = event.pos[0] // SQUARE_SIZE
@@ -140,20 +144,53 @@ while True:
                 if 0 <= col < COLS:
                     row = get_next_open_row(board, col)
 
-                    if row is not None:
-                        x = col * SQUARE_SIZE + SQUARE_SIZE // 2
-                        y = (row + 1) * SQUARE_SIZE + SQUARE_SIZE // 2
+                    color = RED if turn == PLAYER_1 else YELLOW
 
-                        highlight_color = RED if turn == PLAYER_1 else YELLOW
+                    #TOP Preview
+                    top_x = event.pos[0]
+                    top_y = SQUARE_SIZE // 2
+
+                    pygame.draw.circle(
+                        screen,
+                        color,
+                        (top_x, top_y),
+                        RADIUS
+                    )
+
+                    #HOLE Preview (pulse + fade)
+                    if row is not None:
+                        pulse_phase += 0.08
+
+                        pulse_offset = int(3 * abs(math.sin(pulse_phase)))
+                        pulse_radius = RADIUS + pulse_offset
+
+                        hole_x = col * SQUARE_SIZE + SQUARE_SIZE // 2
+                        hole_y = (row + 1) * SQUARE_SIZE + SQUARE_SIZE // 2
+
+                        #Transparent surface for fade
+                        highlight_surface = pygame.Surface(
+                            (pulse_radius * 2 + 4, pulse_radius * 2 + 4),
+                            pygame.SRCALPHA
+                        )
 
                         pygame.draw.circle(
-                            screen,
-                            highlight_color,
-                            (x,y),
-                            RADIUS,
+                            highlight_surface,
+                            (*color, 120),
+                            (highlight_surface.get_width() // 2,
+                            highlight_surface.get_height() // 2),
+                            pulse_radius,
                             width=4
                         )
+
+                        screen.blit(
+                            highlight_surface,
+                            (hole_x - highlight_surface.get_width() // 2,
+                            hole_y - highlight_surface.get_height() // 2)
+                        )
+
                 pygame.display.update()
+                
+
 
             if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
                 if AI_ENABLED and turn == PLAYER_2:
